@@ -11,7 +11,8 @@ services:
       - 27017:27017
 
   server:
-    image: deviavir/zenbot:unstable
+    #image: deviavir/zenbot:unstable
+    image: myzenbot
     volumes:
       - ./conf.js:/app/conf.js
       - ./extensions:/app/extensions
@@ -19,7 +20,7 @@ services:
       - ./models:/app/models
     links:
       - mongodb
-    command: [ "trade", "--paper" ]
+    command: [ "trade", "--paper", "--strategy", "raj"]
     restart: always
     tty: true
     depends_on:
