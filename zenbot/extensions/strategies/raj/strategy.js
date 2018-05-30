@@ -90,11 +90,10 @@ module.exports = {
 
 
     //sell price
-    sell_price = undefined
-
+    sell_price = s.lookback[0].sell_price
     if (s.my_trades.length > 0 && s.my_trades[s.my_trades.length - 1].type == "buy"){
       last_buy = s.my_trades[s.my_trades.length - 1]
-      sell_price = ((last_buy.price * last_buy.size) + last_buy.fee + s.options.profit) / last_buy.size
+      sell_price = ((last_buy.price * last_buy.size) + last_buy.fee + s.options.profit_factor) / last_buy.size
     }
     s.period["sell_price"] = sell_price;
 
@@ -156,7 +155,6 @@ module.exports = {
       //console.log(s)
     }
     else {
-      console.log("got here2")
       cols.push('         ')
     }
     return cols
