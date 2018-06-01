@@ -41,3 +41,8 @@ npm install
 sudo apt-get install git
 git clone https://github.com/neeasthana/CrytoTrading.git
 ```
+
+1. Start the bot with raj's strategy
+```
+./zenbot.sh trade gdax.ETH-USD --paper --strategy raj --period=1m --period_length=1m
+```
