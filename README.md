@@ -5,8 +5,13 @@ Crypto Trading bot POC using Rohit's strategy.
 ## Prototype
 
 - Buy Condition: If the sell volume is 7x more than the buy volume for the given time period
-- Sell Condition: Make a 1 cent profit after fees
+- Sell Condition: Make a 10 cent profit after fees (if it can trade in the first 2 mins) or if the bid volume is 4x more than the ask volume
 - Assuming 1 minute time interval 
+
+## Options
+*thershold* - threshold to compare to for the buy and sell conditions (default is 3)
+*period* - how often to poll for new trades (default 1 minute)
+*profit* - amount of profit to make (default 10 cents)
 
 ## Resources:
 
