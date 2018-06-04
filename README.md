@@ -10,7 +10,9 @@ Crypto Trading bot POC using Rohit's strategy.
 
 ## Options
 *thershold* - threshold to compare to for the buy and sell conditions (default is 3)
+
 *period* - how often to poll for new trades (default 1 minute)
+
 *profit* - amount of profit to make (default 10 cents)
 
 ## Resources:
@@ -21,7 +23,7 @@ Basics of creating your own Zenbot Strategy: https://www.youtube.com/watch?v=zdx
 
 ## Setup
 
-1. Install Docker 
+Install Docker 
 	- install via apt-get because stable builds not available during time of installation for Ubuntu 18.04 (May 29th 2018)
 	- For this version you must use *sudo* on all docker commands
 	- ref: https://www.itzgeek.com/how-tos/linux/ubuntu-how-tos/how-to-install-docker-on-ubuntu-18-04-lts-bionic-beaver.html
@@ -32,7 +34,7 @@ sudo systemctl start docker
 sudo systemctl enable docker
 ```
 
-1. Install Node.js etc. 
+Install Node.js etc. 
 
 ```
 sudo apt-get install build-essential
@@ -41,13 +43,13 @@ sudo apt-get install -y nodejs
 npm install
 ```
 
-1. Download Github 
+Download Github 
 ```
 sudo apt-get install git
 git clone https://github.com/neeasthana/CrytoTrading.git
 ```
 
-1. Start the bot with raj's strategy
+Start the bot with raj's strategy
 ```
 ./zenbot.sh trade gdax.ETH-USD --paper --strategy raj --period=1m --period_length=1m
 ```
