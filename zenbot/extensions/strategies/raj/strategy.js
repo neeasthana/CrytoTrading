@@ -29,29 +29,6 @@ module.exports = {
   },
 
   calculate: function (s) {
-    // if (s.options.overbought_rsi) {
-    //   // sync RSI display with overbought RSI periods
-    //   s.options.rsi_periods = s.options.overbought_rsi_periods
-    //   rsi(s, 'overbought_rsi', s.options.overbought_rsi_periods)
-    //   if (!s.in_preroll && s.period.overbought_rsi >= s.options.overbought_rsi && !s.overbought) {
-    //     s.overbought = true
-    //     if (s.options.mode === 'sim' && s.options.verbose) console.log(('\noverbought at ' + s.period.overbought_rsi + ' RSI, preparing to sold\n').cyan)
-    //   }
-    // }
-
-    // // compute MACD
-    // ema(s, 'ema_short', s.options.ema_short_period)
-    // ema(s, 'ema_long', s.options.ema_long_period)
-    // if (s.period.ema_short && s.period.ema_long) {
-    //   s.period.macd = (s.period.ema_short - s.period.ema_long)
-    //   ema(s, 'signal', s.options.signal_period, 'macd')
-    //   if (s.period.signal) {
-    //     s.period.macd_histogram = s.period.macd - s.period.signal
-    //   }
-    // }
-
-    //MY CODE START
-
     if(s.lookback 
       && s.lookback[0] 
       && s.lookback[0].time ){
@@ -89,14 +66,31 @@ module.exports = {
     }
 
 
-    //sell price
+    //sell price - encoded as the average of the last few buys
     sell_price = undefined
-    if(s.lookback[0]){
-      sell_price = s.lookback[0].sell_price
-    }
-    if (s.my_trades.length > 0 && s.my_trades[s.my_trades.length - 1].type == "buy"){
-      last_buy = s.my_trades[s.my_trades.length - 1]
-      sell_price = ((last_buy.price * last_buy.size) + last_buy.fee + s.options.profit_factor) / last_buy.size
+    sell_quantity = 0
+
+    if (s.my_trades.length > 0){
+      pointer = 0
+      while((s.my_trades.length - 1 - pointer) >= 0 && s.my_trades[s.my_trades.length - 1 - pointer].type == "buy"){
+        last_buy = s.my_trades[s.my_trades.length - 1 - pointer]
+        last_buy_price = parseFloat(last_buy.price)
+        last_buy_quantity = parseFloat(last_buy.size)
+
+        if(sell_price){
+          console.log(pointer + " - " + sell_price)
+          console.log(pointer + " - " + sell_quantity)
+          sell_price = ((sell_price * sell_quantity) + (last_buy_price*last_buy_quantity)) / (sell_quantity + last_buy_quantity)
+          sell_quantity = sell_quantity + last_buy_quantity
+          console.log(pointer + " - " + sell_price)
+          console.log(pointer + " - " + sell_quantity)
+        }
+        else{
+          sell_price = ((last_buy_price * last_buy_quantity) + last_buy.fee + s.options.profit_factor) / last_buy_quantity
+          sell_quantity = last_buy_quantity
+        }
+        pointer += 1
+      }
     }
     s.period["sell_price"] = sell_price;
 
