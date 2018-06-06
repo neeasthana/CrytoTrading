@@ -183,7 +183,10 @@ module.exports = {
     up_trend_threshold: Phenotypes.Range(0, 50),
     down_trend_threshold: Phenotypes.Range(0, 50),
     overbought_rsi_periods: Phenotypes.Range(1, 50),
-    overbought_rsi: Phenotypes.Range(20, 100)
+    overbought_rsi: Phenotypes.Range(20, 100),
+    buy_factor: Phenotypes.Range(1,100),
+    profit_factor: Phenotypes.Range(.01,100),
+    wait_time: Phenotypes.Range(1,20)
   }
 }
 
