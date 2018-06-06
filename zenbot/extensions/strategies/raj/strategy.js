@@ -78,12 +78,12 @@ module.exports = {
         last_buy_quantity = parseFloat(last_buy.size)
 
         if(sell_price){
-          console.log(pointer + " - " + sell_price)
-          console.log(pointer + " - " + sell_quantity)
+          // console.log(pointer + " - " + sell_price)
+          // console.log(pointer + " - " + sell_quantity)
           sell_price = ((sell_price * sell_quantity) + (last_buy_price*last_buy_quantity)) / (sell_quantity + last_buy_quantity)
           sell_quantity = sell_quantity + last_buy_quantity
-          console.log(pointer + " - " + sell_price)
-          console.log(pointer + " - " + sell_quantity)
+          // console.log(pointer + " - " + sell_price)
+          // console.log(pointer + " - " + sell_quantity)
         }
         else{
           sell_price = ((last_buy_price * last_buy_quantity) + last_buy.fee + s.options.profit_factor) / last_buy_quantity
@@ -92,7 +92,7 @@ module.exports = {
         pointer += 1
       }
     }
-    s.period["sell_price"] = sell_price;
+    s.period["sell_price"] = sell_price
 
     //MY CODE END
   },
@@ -119,11 +119,14 @@ module.exports = {
     // }
 
     if (typeof s.period.buy_volume === 'number' && typeof s.period.sell_volume === 'number') {
-      if ((s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor) {
-        s.signal = 'buy'
-      } else if (s.period["sell_price"] && s.period.close > s.period["sell_price"]) {
+
+      if(s.period["sell_price"] && s.period.close > s.period["sell_price"]){
         s.signal = 'sell'
-      } else {
+      }
+      else if ((s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor) {
+        s.signal = 'buy'
+      } 
+      else {
         s.signal = null  // hold
       }
     }
@@ -146,7 +149,7 @@ module.exports = {
       cols.push(z(8, n(s.period.sell_volume).format('+00.0000'), ' ').cyan)
       
       console.log("\n")
-      console.log(s.my_trades)
+      console.log(s.period)
       console.log("\ngot here " + s.period.sell_price)
       //console.log(s.period)
       //console.log(s)
