@@ -24,8 +24,9 @@ module.exports = {
     this.option('down_trend_threshold', 'threshold to trigger a sold signal', Number, 0)
     this.option('overbought_rsi_periods', 'number of periods for overbought RSI', Number, 25)
     this.option('overbought_rsi', 'sold when RSI exceeds this value', Number, 70),
-    this.option('buy_factor', 'buy factor encodes the difference between buy and sell (7 for now)', Number, 2)
-    this.option('profit_factor', 'profit per share before selling', Number, .1)
+    this.option('buy_factor', 'buy factor encodes the difference between buy and sell (7 for now)', Number, 4)
+    this.option('profit_factor', 'profit per share before selling', Number, .1),
+    this.option('wait_time', 'wait time in minutes before moving to saving money strategy', Number, 5)
   },
 
   calculate: function (s) {
@@ -120,7 +121,10 @@ module.exports = {
 
     if (typeof s.period.buy_volume === 'number' && typeof s.period.sell_volume === 'number') {
 
-      if(s.period["sell_price"] && s.period.close > s.period["sell_price"]){
+      if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && s.my_trades[s.my_trades.length-1].time+(60*s.options.wait_time) <= s.period.time){
+        s.signal = 'sell'
+      }
+      else if(s.period["sell_price"] && s.my_trades[s.my_trades.length-1].time+(60*s.options.wait_time) <= s.period.time && (s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor){
         s.signal = 'sell'
       }
       else if ((s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor) {
