@@ -130,7 +130,7 @@ module.exports = {
       }
       else if ((s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor) {
         s.signal = 'buy'
-        s.options.order_type = 'maker'
+        s.options.order_type = 'taker'
       } 
       else {
         s.signal = null  // hold
