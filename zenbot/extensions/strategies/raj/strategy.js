@@ -156,6 +156,7 @@ module.exports = {
       
       console.log("\n")
       console.log(s.period)
+      console.log(s.options)
       console.log("\ngot here " + s.period.sell_price)
       //console.log(s.period)
       //console.log(s)
