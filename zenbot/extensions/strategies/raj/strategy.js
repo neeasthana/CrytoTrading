@@ -122,12 +122,15 @@ module.exports = {
 
       if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && (s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor){
         s.signal = 'sell'
+        s.options.order_type = 'maker'
       }
       else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor){
         s.signal = 'sell'
+        s.options.order_type = 'taker'
       }
       else if ((s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor) {
         s.signal = 'buy'
+        s.options.order_type = 'maker'
       } 
       else {
         s.signal = null  // hold
