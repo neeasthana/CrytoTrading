@@ -147,13 +147,14 @@ module.exports = {
     //&& typeof s.lookback[0].buy_volume === 'number'
     if (typeof s.period.buy_volume === 'number' ) {
 
-      var color = 'grey'
-      if (s.period.buy_volume > s.period.sell_volume) {
-        color = 'green'
-      }
-      else if (s.period.buy_volume < s.period.sell_volume) {
-        color = 'red'
-      }
+      var color = 'red'
+      // var color = 'grey'
+      // if (s.period.buy_volume > s.period.sell_volume) {
+      //   color = 'green'
+      // }
+      // else if (s.period.buy_volume < s.period.sell_volume) {
+      //   color = 'red'
+      // }
       cols.push(z(8, n(s.period.buy_volume).format('+00.0000'), ' ')[color])
       cols.push(z(8, n(s.period.sell_volume).format('+00.0000'), ' ').cyan)
       
