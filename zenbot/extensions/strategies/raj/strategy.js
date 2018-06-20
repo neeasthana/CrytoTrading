@@ -120,7 +120,10 @@ module.exports = {
 
     if (typeof s.period.buy_volume === 'number' && typeof s.period.sell_volume === 'number') {
 
-      if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && (s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor){
+      if (s.signal == 'sell' && s.period["sell_price"] && (s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor){
+        s.signal = null // cancel the trade
+      }
+      else if(s.period["sell_price"] && s.period.close > s.period["sell_price"]){
         s.signal = 'sell'
         s.options.order_type = 'maker'
       }
