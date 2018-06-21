@@ -117,21 +117,25 @@ module.exports = {
     //     s.signal = null  // hold
     //   }
     // }
+    last_trade_type = "blank"
+    if(s.my_trades.length > 0){
+      last_trade_type = s.my_trades[s.my_trades.length - 1].type
+    }
 
     if (typeof s.period.buy_volume === 'number' && typeof s.period.sell_volume === 'number') {
 
       if (s.signal == 'sell' && s.period["sell_price"] && (s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor){
         s.signal = null // cancel the trade
       }
-      else if(s.period["sell_price"] && s.period.close > s.period["sell_price"]){
+      else if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && last_trade_type != "sell"){
         s.signal = 'sell'
         s.options.order_type = 'maker'
       }
-      else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor){
+      else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor && last_trade_type != "sell"){
         s.signal = 'sell'
         s.options.order_type = 'taker'
       }
-      else if ((s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor) {
+      else if ((s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor && last_trade_type != "buy") {
         s.signal = 'buy'
         s.options.order_type = 'taker'
       } 
