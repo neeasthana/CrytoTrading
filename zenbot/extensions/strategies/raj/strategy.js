@@ -3,6 +3,7 @@ var z = require('zero-fill')
   , ema = require('../../../lib/ema')
   , rsi = require('../../../lib/rsi')
   , Phenotypes = require('../../../lib/phenotype')
+  , fs = require('fs')
 
 var precisionRound = function(number, precision) {
   var factor = Math.pow(10, precision)
@@ -143,6 +144,9 @@ module.exports = {
         s.signal = null  // hold
       }
     }
+
+    line = "\n" + s.period.time + "," + s.period.close + "," + s.period.buy_volume + "," + s.period.sell_volume + "," + s.signal + "," + s.options.order_type + "," + s.period.sell_price
+    fs.appendFileSync('log.txt', "" + line)
     cb()
   },
 
