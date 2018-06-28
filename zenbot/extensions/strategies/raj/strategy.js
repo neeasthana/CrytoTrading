@@ -145,7 +145,7 @@ module.exports = {
       }
     }
 
-    line = "\n" + s.period.time + "," + s.period.close + "," + s.period.buy_volume + "," + s.period.sell_volume + "," + s.signal + "," + s.options.order_type + "," + s.period.sell_price
+    line = "" + s.period.time + "," + s.period.close + "," + s.period.buy_volume + "," + s.period.sell_volume + "," + s.signal + "," + s.options.order_type + "," + s.period.sell_price + "\n"
     fs.appendFileSync('log.txt', "" + line)
     cb()
   },
