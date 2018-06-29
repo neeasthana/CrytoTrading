@@ -125,12 +125,13 @@ module.exports = {
 
     if (typeof s.period.buy_volume === 'number' && typeof s.period.sell_volume === 'number') {
 
-      if (s.signal == 'sell' && s.period["sell_price"] && (s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor){
-        s.signal = null // cancel the trade
-      }
-      else if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && last_trade_type != "sell"){
+      // if (s.signal == 'sell' && s.period["sell_price"] && (s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor){
+      //   s.signal = null // cancel the trade
+      // }
+      // else 
+      if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && last_trade_type != "sell"){
         s.signal = 'sell'
-        s.options.order_type = 'maker'
+        s.options.order_type = 'taker'
       }
       else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor && last_trade_type != "sell"){
         s.signal = 'sell'
