@@ -123,6 +123,8 @@ module.exports = {
       last_trade_type = s.my_trades[s.my_trades.length - 1].type
     }
 
+    reasoning = ""
+
     if (typeof s.period.buy_volume === 'number' && typeof s.period.sell_volume === 'number') {
 
       // if (s.signal == 'sell' && s.period["sell_price"] && (s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor){
@@ -132,14 +134,18 @@ module.exports = {
       if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && last_trade_type != "sell"){
         s.signal = 'sell'
         s.options.order_type = 'taker'
+        reasoning = "20 cent profit"
       }
       else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor && last_trade_type != "sell"){
         s.signal = 'sell'
         s.options.order_type = 'taker'
+        reasoning = "ask volume is " + s.options.buy_factor " times more than the bid volume"
       }
       else if ((s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor && last_trade_type != "buy") {
         s.signal = 'buy'
         s.options.order_type = 'taker'
+        reasoning = "bid volume is " + s.options.buy_factor " times more than the ask volume"
+      }
       } 
       else {
         s.signal = null  // hold
@@ -147,7 +153,7 @@ module.exports = {
     }
 
     if(s.signal){
-      line = "" + s.period.time + "," + s.period.close + "," + s.period.buy_volume + "," + s.period.sell_volume + "," + s.signal + "," + s.options.order_type + "," + s.period.sell_price + "\n"
+      line = "" + s.period.time + "," + s.period.close + "," + s.period.buy_volume + "," + s.period.sell_volume + "," + s.signal + "," + s.options.order_type + "," + s.period.sell_price + "," + reasoning +"\n"
       fs.appendFileSync('log.txt', "" + line)
     }
     cb()
