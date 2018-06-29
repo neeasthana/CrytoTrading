@@ -145,7 +145,6 @@ module.exports = {
         s.signal = 'buy'
         s.options.order_type = 'taker'
         reasoning = "bid volume is " + s.options.buy_factor + " times more than the ask volume"
-      }
       } 
       else {
         s.signal = null  // hold
