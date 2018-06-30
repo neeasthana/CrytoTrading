@@ -138,11 +138,11 @@ module.exports = {
         s.options.order_type = 'taker'
         reasoning = "20 cent profit"
       }
-      else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor && last_trade_type != "sell"){
-        s.signal = 'sell'
-        s.options.order_type = 'taker'
-        reasoning = "ask volume is " + s.options.buy_factor + " times more than the bid volume"
-      }
+      // else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor && last_trade_type != "sell"){
+      //   s.signal = 'sell'
+      //   s.options.order_type = 'taker'
+      //   reasoning = "ask volume is " + s.options.buy_factor + " times more than the bid volume"
+      // }
       else if ((s.period.buy_volume/s.period.sell_volume) > s.options.buy_factor && last_trade_type != "buy") {
         s.signal = 'buy'
         s.options.order_type = 'taker'
