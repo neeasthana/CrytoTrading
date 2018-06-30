@@ -71,6 +71,8 @@ module.exports = {
     sell_price = undefined
     sell_quantity = 0
 
+    fee_percentage = 1.003
+
     if (s.my_trades.length > 0){
       pointer = 0
       while((s.my_trades.length - 1 - pointer) >= 0 && s.my_trades[s.my_trades.length - 1 - pointer].type == "buy"){
@@ -81,13 +83,13 @@ module.exports = {
         if(sell_price){
           // console.log(pointer + " - " + sell_price)
           // console.log(pointer + " - " + sell_quantity)
-          sell_price = ((sell_price * sell_quantity) + (last_buy_price*last_buy_quantity)) / (sell_quantity + last_buy_quantity)
+          sell_price = (((sell_price * sell_quantity) + (last_buy_price*last_buy_quantity)) / (sell_quantity + last_buy_quantity))/fee_percentage
           sell_quantity = sell_quantity + last_buy_quantity
           // console.log(pointer + " - " + sell_price)
           // console.log(pointer + " - " + sell_quantity)
         }
         else{
-          sell_price = ((last_buy_price * last_buy_quantity) + last_buy.fee + s.options.profit_factor) / last_buy_quantity
+          sell_price = (((last_buy_price * last_buy_quantity) + last_buy.fee + s.options.profit_factor) / last_buy_quantity)/fee_percentage
           sell_quantity = last_buy_quantity
         }
         pointer += 1
