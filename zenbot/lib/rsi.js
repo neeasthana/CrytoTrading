@@ -4,12 +4,6 @@ var precisionRound = function(number, precision) {
 }
 module.exports = function rsi (s, key, length) {
   if (s.lookback.length >= length) {
-    // console.log("\n\n\nSTART")
-
-    // console.log(s)
-
-    // console.log("END\n\n\n")
-
     var avg_gain = s.lookback[0][key + '_avg_gain']
     var avg_loss = s.lookback[0][key + '_avg_loss']
     if (typeof avg_gain === 'undefined') {

@@ -11,6 +11,5 @@ RUN ln -s /app/zenbot.sh /usr/local/bin/zenbot
 
 ENV NODE_ENV production
 
-#ENTRYPOINT ["/usr/local/bin/node", "zenbot.js", "trade", "--paper", "--strategy", "raj"]
 ENTRYPOINT ["/usr/local/bin/node", "zenbot.js"]
-CMD [ "trade", "--paper", "--strategy", "raj"]
+CMD [ "trade", "--paper" ]
