@@ -10,6 +10,25 @@ var precisionRound = function(number, precision) {
   return Math.round(number * factor) / factor
 }
 
+var calculate_sell_price = function(buy_price, buy_quantity, fee_amount){
+  var fee = .003
+  var profit = .2
+  
+  var total_price_bought = buy_price * buy_quantity
+  // var fee_total_cost = total_price_bought * .003  //NOT CORRECT because total_price_bought is wrong usage here (need to add fee to that)
+  var sell_fee = (total_price_bought + fee_amount + profit) * fee //NOT CORRECT because total_price_bought is wrong usage here (need to add fee to that)
+
+  console.log("total_price_bought: " + total_price_bought)
+  console.log("fee_amount: " + fee_amount)
+  console.log("sell_fee: " + sell_fee)
+
+  var sell_quantity = buy_quantity
+
+  var sell_price = (profit + total_price_bought + fee_amount + sell_fee)/sell_quantity   + .01
+
+  console.log("sell_price: " + sell_price)
+}
+
 module.exports = {
   name: 'raj',
   description: 'Buy when (MACD - Signal > 0) and sell when (MACD - Signal < 0).',
