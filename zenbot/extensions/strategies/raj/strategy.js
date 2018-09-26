@@ -10,9 +10,8 @@ var precisionRound = function(number, precision) {
   return Math.round(number * factor) / factor
 }
 
-var calculate_sell_price = function(buy_price, buy_quantity, fee_amount){
+var calculate_sell_price = function(buy_price, buy_quantity, fee_amount, profit = .1){
   var fee = .003
-  var profit = .2
   
   var total_price_bought = buy_price * buy_quantity
   // var fee_total_cost = total_price_bought * .003  //NOT CORRECT because total_price_bought is wrong usage here (need to add fee to that)
@@ -46,7 +45,7 @@ module.exports = {
     this.option('overbought_rsi_periods', 'number of periods for overbought RSI', Number, 25)
     this.option('overbought_rsi', 'sold when RSI exceeds this value', Number, 70),
     this.option('buy_factor', 'buy factor encodes the difference between buy and sell', Number, 3)
-    this.option('profit_factor', 'profit per share before selling', Number, .2)
+    this.option('profit_factor', 'profit per share before selling', Number, .1)
   },
 
   calculate: function (s) {
@@ -103,9 +102,10 @@ module.exports = {
         last_buy_quantity = parseFloat(last_buy.size)
         last_buy_fee = parseFloat(last_buy.fee)
         last_buy_total_spent = last_buy_price*last_buy_quantity + last_buy.fee
+        profit_amount = parseFloat(s.options.profit_factor)
 
         if(sell_price){
-          sell_price_last = calculate_sell_price(last_buy_price, last_buy_quantity, last_buy_fee)
+          sell_price_last = calculate_sell_price(last_buy_price, last_buy_quantity, last_buy_fee, profit_amount)
 
           //average sell prices of previous and now
           sell_price = ((sell_price * sell_quantity) + (sell_price_last * last_buy_quantity))/ (sell_quantity + last_buy_quantity)
@@ -114,7 +114,7 @@ module.exports = {
         else{
           //sell_price = (((last_buy_price * last_buy_quantity) + last_buy.fee + s.options.profit_factor) / last_buy_quantity)/fee_percentage
           // sell_price = (s.options.profit_factor + (last_buy_price*last_buy_quantity) + last_buy_total_spent*fee_percentage + ((last_buy_total_spent + s.options.profit_factor)*fee_percentage )/last_buy_quantity ) + .01
-          sell_price = calculate_sell_price(last_buy_price, last_buy_quantity, last_buy_fee)
+          sell_price = calculate_sell_price(last_buy_price, last_buy_quantity, last_buy_fee, profit_amount)
           sell_quantity = last_buy_quantity
         }
         pointer += 1
