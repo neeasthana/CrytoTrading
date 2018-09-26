@@ -18,15 +18,16 @@ var calculate_sell_price = function(buy_price, buy_quantity, fee_amount){
   // var fee_total_cost = total_price_bought * .003  //NOT CORRECT because total_price_bought is wrong usage here (need to add fee to that)
   var sell_fee = (total_price_bought + fee_amount + profit) * fee //NOT CORRECT because total_price_bought is wrong usage here (need to add fee to that)
 
-  console.log("total_price_bought: " + total_price_bought)
-  console.log("fee_amount: " + fee_amount)
-  console.log("sell_fee: " + sell_fee)
+  // console.log("total_price_bought: " + total_price_bought)
+  // console.log("fee_amount: " + fee_amount)
+  // console.log("sell_fee: " + sell_fee)
 
   var sell_quantity = buy_quantity
 
   var sell_price = (profit + total_price_bought + fee_amount + sell_fee)/sell_quantity   + .01
 
   console.log("sell_price: " + sell_price)
+  return sell_price
 }
 
 module.exports = {
@@ -44,8 +45,8 @@ module.exports = {
     this.option('down_trend_threshold', 'threshold to trigger a sold signal', Number, 0)
     this.option('overbought_rsi_periods', 'number of periods for overbought RSI', Number, 25)
     this.option('overbought_rsi', 'sold when RSI exceeds this value', Number, 70),
-    this.option('buy_factor', 'buy factor encodes the difference between buy and sell (7 for now)', Number, 4)
-    this.option('profit_factor', 'profit per share before selling', Number, .1)
+    this.option('buy_factor', 'buy factor encodes the difference between buy and sell', Number, 3)
+    this.option('profit_factor', 'profit per share before selling', Number, .2)
   },
 
   calculate: function (s) {
@@ -92,29 +93,33 @@ module.exports = {
 
     fee_percentage = 1.003
 
+    // Selling can only happen when we have performed at least one buy
+    // Since there can be multiple sell orders in a row, we must loop through all sells and populate the sell price as the average
     if (s.my_trades.length > 0){
       pointer = 0
       while((s.my_trades.length - 1 - pointer) >= 0 && s.my_trades[s.my_trades.length - 1 - pointer].type == "buy"){
         last_buy = s.my_trades[s.my_trades.length - 1 - pointer]
         last_buy_price = parseFloat(last_buy.price)
         last_buy_quantity = parseFloat(last_buy.size)
+        last_buy_fee = parseFloat(last_buy.fee)
         last_buy_total_spent = last_buy_price*last_buy_quantity + last_buy.fee
 
         if(sell_price){
-          // console.log(pointer + " - " + sell_price)
-          // console.log(pointer + " - " + sell_quantity)
-          sell_price = (((sell_price * sell_quantity) + (last_buy_price*last_buy_quantity)) / (sell_quantity + last_buy_quantity))/fee_percentage
+          sell_price_last = calculate_sell_price(last_buy_price, last_buy_quantity, last_buy_fee)
+
+          //average sell prices of previous and now
+          sell_price = ((sell_price * sell_quantity) + (sell_price_last * last_buy_quantity))/ (sell_quantity + last_buy_quantity)
           sell_quantity = sell_quantity + last_buy_quantity
-          // console.log(pointer + " - " + sell_price)
-          // console.log(pointer + " - " + sell_quantity)
         }
         else{
           //sell_price = (((last_buy_price * last_buy_quantity) + last_buy.fee + s.options.profit_factor) / last_buy_quantity)/fee_percentage
-          sell_price = (s.options.profit_factor + (last_buy_price*last_buy_quantity) + last_buy_total_spent*fee_percentage + ((last_buy_total_spent + s.options.profit_factor)*fee_percentage )/last_buy_quantity ) + .01
+          // sell_price = (s.options.profit_factor + (last_buy_price*last_buy_quantity) + last_buy_total_spent*fee_percentage + ((last_buy_total_spent + s.options.profit_factor)*fee_percentage )/last_buy_quantity ) + .01
+          sell_price = calculate_sell_price(last_buy_price, last_buy_quantity, last_buy_fee)
           sell_quantity = last_buy_quantity
         }
         pointer += 1
       }
+      console.log("Sell price: " + sell_price)
     }
     s.period["sell_price"] = sell_price
 
@@ -198,9 +203,9 @@ module.exports = {
       cols.push(z(8, n(s.period.sell_volume).format('+00.0000'), ' ').cyan)
       
       console.log("\n")
-      console.log(s.period)
-      console.log(s.options)
-      console.log("\ngot here " + s.period.sell_price)
+      // console.log(s.period)
+      // console.log(s.options)
+      console.log("\nsell price: " + s.period.sell_price)
       //console.log(s.period)
       //console.log(s)
     }
