@@ -135,7 +135,7 @@ module.exports = {
       // else 
       if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && last_trade_type != "sell"){
         s.signal = 'sell'
-        s.options.order_type = 'taker'
+        s.options.order_type = 'maker'
         reasoning = "20 cent profit"
       }
       // else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor && last_trade_type != "sell"){
