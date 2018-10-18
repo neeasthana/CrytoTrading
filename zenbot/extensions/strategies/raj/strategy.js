@@ -15,7 +15,8 @@ var calculate_sell_price = function(buy_price, buy_quantity, fee_amount, profit 
   
   var total_price_bought = buy_price * buy_quantity
   // var fee_total_cost = total_price_bought * .003  //NOT CORRECT because total_price_bought is wrong usage here (need to add fee to that)
-  var sell_fee = (total_price_bought + fee_amount + profit) * fee //NOT CORRECT because total_price_bought is wrong usage here (need to add fee to that)
+  var sell_fee = (total_price_bought + fee_amount + profit) * fee
+  var sell_fee = 0
 
   // console.log("total_price_bought: " + total_price_bought)
   // console.log("fee_amount: " + fee_amount)
@@ -25,7 +26,7 @@ var calculate_sell_price = function(buy_price, buy_quantity, fee_amount, profit 
 
   var sell_price = (profit + total_price_bought + fee_amount + sell_fee)/sell_quantity   + .01
 
-  console.log("sell_price: " + sell_price)
+  // console.log("sell_price: " + sell_price)
   return sell_price
 }
 
@@ -90,8 +91,6 @@ module.exports = {
     sell_price = undefined
     sell_quantity = 0
 
-    fee_percentage = 1.003
-
     // Selling can only happen when we have performed at least one buy
     // Since there can be multiple sell orders in a row, we must loop through all sells and populate the sell price as the average
     if (s.my_trades.length > 0){
@@ -112,8 +111,6 @@ module.exports = {
           sell_quantity = sell_quantity + last_buy_quantity
         }
         else{
-          //sell_price = (((last_buy_price * last_buy_quantity) + last_buy.fee + s.options.profit_factor) / last_buy_quantity)/fee_percentage
-          // sell_price = (s.options.profit_factor + (last_buy_price*last_buy_quantity) + last_buy_total_spent*fee_percentage + ((last_buy_total_spent + s.options.profit_factor)*fee_percentage )/last_buy_quantity ) + .01
           sell_price = calculate_sell_price(last_buy_price, last_buy_quantity, last_buy_fee, profit_amount)
           sell_quantity = last_buy_quantity
         }
@@ -161,7 +158,7 @@ module.exports = {
       // else 
       if(s.period["sell_price"] && s.period.close > s.period["sell_price"] && last_trade_type != "sell"){
         s.signal = 'sell'
-        s.options.order_type = 'taker'
+        s.options.order_type = 'maker'
         reasoning = "20 cent profit"
       }
       // else if(s.period["sell_price"] && (s.period.sell_volume/s.period.buy_volume) > s.options.buy_factor && last_trade_type != "sell"){
