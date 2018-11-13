@@ -32,7 +32,7 @@ var calculate_sell_price = function(buy_price, buy_quantity, fee_amount, profit 
 
 module.exports = {
   name: 'raj',
-  description: 'Buy when (MACD - Signal > 0) and sell when (MACD - Signal < 0).',
+  description: 'Buy when (sell_volume > buy_factor) and sell when (buy_volume < buy_factor).',
 
   getOptions: function () {
     this.option('period', 'period length, same as --period_length', String, '1h')
